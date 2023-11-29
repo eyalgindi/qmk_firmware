@@ -16,13 +16,11 @@
 
 #include QMK_KEYBOARD_H
 
-// clang-format off
+
 
 enum layers{
   MAC_BASE,
-  MAC_FN,
-  WIN_BASE,
-  WIN_FN
+  MAC_FN
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -55,6 +53,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,            _______,  _______,  _______,  _______,  _______,  NK_TOGG,  _______,  _______,  _______,  _______,              _______,  _______,  _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,    _______,  _______,  _______,  _______,  _______,  _______,  _______),
 };
+
+
+const uint16_t PROGMEM lock_scr_combo[] = {KC_1, KC_2, COMBO_END};
+
+combo_t key_combos[] = {
+    COMBO(lock_scr_combo, LCTL(LCMD(KC_Q)))
+};
+
+
+
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
