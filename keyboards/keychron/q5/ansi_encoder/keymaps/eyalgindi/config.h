@@ -17,3 +17,4 @@
 #pragma once
 
 #define AUTO_SHIFT_TIMEOUT 250
+#define DOUBLE_TAP_SHIFT_TURNS_ON_CAPS_WORD

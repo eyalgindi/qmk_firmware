@@ -14,6 +14,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "keycodes.h"
 #include QMK_KEYBOARD_H
 
 enum layers{
@@ -43,7 +44,7 @@ enum {
 
 //Tap dance enums
 enum {
-  SHIFT_OSL = 0
+  CTL_OSL = 0
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -52,8 +53,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_NUM,   KC_PSLS,  KC_PAST,  KC_PMNS,
         KC_TAB,   KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,  KC_BSLS,            KC_P7,    KC_P8,    KC_P9,
         KC_CAPS,  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,              KC_ENT,             KC_P4,    KC_P5,    KC_P6,    KC_PPLS,
-        TD(SHIFT_OSL),            KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,    KC_P1,    KC_P2,    KC_P3,
-        KC_LCTL,  KC_LOPT,  KC_LCMD,                                KC_SPC,                                 KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT,  KC_P0,    KC_PDOT,  KC_PENT),
+        KC_LSFT,            KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,    KC_P1,    KC_P2,    KC_P3,
+        TD(CTL_OSL),  KC_LOPT,  KC_LCMD,                                KC_SPC,                                 KC_RCMD,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT,  KC_P0,    KC_PDOT,  KC_PENT),
 
     [MAC_FN] = LAYOUT_ansi_98(
         _______,            KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,     KC_F11,   KC_F12,             _______,  _______,  _______,  RGB_TOG,
@@ -64,12 +65,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,  _______,  _______,                                _______,                                _______,  _______,    _______,  QK_BOOT,  _______,  _______,  _______,  _______,  _______),
 
     [SEND_STRINGS] = LAYOUT_ansi_98(
-        KC_ESC,             KC_F1,    KC_F2,    KC_F3,    KC_F4,    KC_F5,    KC_F6,    KC_F7,    KC_F8,    KC_F9,    KC_F10,     KC_F11,   KC_F12,             KC_DEL,   KC_HOME,  KC_END,   KC_MUTE,
-        KC_GRV,   KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,    KC_EQL,   KC_BSPC,            KC_NUM,   KC_PSLS,  KC_PAST,  KC_PMNS,
-        KC_TAB,   KC_Q,     KC_W,     SS_EML,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,    KC_RBRC,  KC_BSLS,            KC_P7,    KC_P8,    KC_P9,
-        KC_CAPS,  KC_A,     KC_S,     KC_D,     KC_F,     SS_GML,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,              KC_ENT,             KC_P4,    KC_P5,    KC_P6,    KC_PPLS,
-        KC_LSFT,            KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,              KC_RSFT,  KC_UP,    KC_P1,    KC_P2,    KC_P3,
-        KC_LCTL,  KC_LWIN,  KC_LALT,                                KC_SPC,                                 KC_RALT,  MO(MAC_FN), KC_RCTL,  KC_LEFT,  KC_DOWN,  KC_RGHT,  KC_P0,    KC_PDOT,  KC_PENT),
+        _______,             _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,     _______,   _______,             _______,   _______,  _______,   _______,
+        _______,   _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,    _______,   _______,            _______,   _______,  _______,  _______,
+        _______,   _______,     _______,     SS_EML,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,    _______,  _______,            _______,    _______,    _______,
+        _______,  _______,     _______,     _______,     _______,     SS_GML,     _______,     _______,     _______,     _______,     _______,  _______,              _______,             _______,    _______,    _______,    _______,
+        _______,            _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,  _______,   _______,              _______,  _______,    _______,    _______,    _______,
+        _______,  _______,  _______,                                _______,                                 _______,  _______, _______,  _______,  _______,  _______,  _______,    _______,  _______),
 
 };
 
@@ -96,40 +97,41 @@ int cur_dance (tap_dance_state_t *state) {
   else return 8;
 }
 
-static tap shifttap_state = {
+static tap ctltap_state = {
     .is_press_action = true,
     .state = 0
 };
 
 
-void shift_finished (tap_dance_state_t *state, void *user_data) {
-  shifttap_state.state = cur_dance(state);
-  switch (shifttap_state.state) {
+void ctl_finished (tap_dance_state_t *state, void *user_data) {
+  ctltap_state.state = cur_dance(state);
+  switch (ctltap_state.state) {
   case SINGLE_TAP: set_oneshot_layer(SEND_STRINGS, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
-  case SINGLE_HOLD: register_code(KC_LSFT); break;
+  case SINGLE_HOLD: register_code(KC_LCTL); break;
   case DOUBLE_TAP: set_oneshot_layer(SEND_STRINGS, ONESHOT_START); set_oneshot_layer(1, ONESHOT_PRESSED); break;
-  case DOUBLE_HOLD: register_code(KC_LSFT); layer_on(1); break;
+  case DOUBLE_HOLD: register_code(KC_LCTL); layer_on(1); break;
   }
 }
 
-void shift_reset (tap_dance_state_t *state, void *user_data) {
-  switch (shifttap_state.state) {
+void ctl_reset (tap_dance_state_t *state, void *user_data) {
+  switch (ctltap_state.state) {
   case SINGLE_TAP: break;
-  case SINGLE_HOLD: unregister_code(KC_LSFT); break;
+  case SINGLE_HOLD: unregister_code(KC_LCTL); break;
   case DOUBLE_TAP: break;
-  case DOUBLE_HOLD: layer_off(SEND_STRINGS); unregister_code(KC_LSFT); break;
+  case DOUBLE_HOLD: layer_off(SEND_STRINGS); unregister_code(KC_LCTL); break;
   }
-  shifttap_state.state = 0;
+  ctltap_state.state = 0;
 }
 
 tap_dance_action_t tap_dance_actions[] = {
-         [SHIFT_OSL]     = ACTION_TAP_DANCE_FN_ADVANCED(NULL,shift_finished, shift_reset)
+         [CTL_OSL]     = ACTION_TAP_DANCE_FN_ADVANCED(NULL,ctl_finished, ctl_reset)
 };
 
 bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 
   switch (keycode) {
       case KC_TRNS:
+      case KC_LCTL:
       case KC_NO:
         if (record->event.pressed && is_oneshot_layer_active()){
           clear_oneshot_layer_state(ONESHOT_OTHER_KEY_PRESSED);
