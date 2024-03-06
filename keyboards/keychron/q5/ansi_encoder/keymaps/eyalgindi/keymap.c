@@ -15,18 +15,22 @@
  */
 
 #include "keycodes.h"
+#include "features/select_word.h"
 #include QMK_KEYBOARD_H
 
 enum layers{
   MAC_BASE,
   MAC_FN,
-  SEND_STRINGS
+  MACROS
 };
 
-enum SS_KEKCODES {
+enum custom_keycodes {
   SS_GML = SAFE_RANGE,
-  SS_EML
+  SS_EML,
+  SELWORD //https://getreuer.info/posts/keyboards/select-word/index.html
 };
+
+
 
 typedef struct {
   bool is_press_action;
@@ -64,13 +68,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______,            _______,  _______,  _______,  _______,  _______,  NK_TOGG,  _______,  _______,  _______,  _______,              _______,  _______,  _______,  _______,  _______,
         _______,  _______,  _______,                                _______,                                _______,  _______,    _______,  QK_BOOT,  _______,  _______,  _______,  _______,  _______),
 
-    [SEND_STRINGS] = LAYOUT_ansi_98(
+    [MACROS] = LAYOUT_ansi_98(
         _______,             _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,    _______,     _______,   _______,             _______,   _______,  _______,   _______,
         _______,   _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,    _______,   _______,            _______,   _______,  _______,  _______,
         _______,   _______,     _______,     SS_EML,     _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,    _______,  _______,            _______,    _______,    _______,
         _______,  _______,     _______,     _______,     _______,     SS_GML,     _______,     _______,     _______,     _______,     _______,  _______,              _______,             _______,    _______,    _______,    _______,
         _______,            _______,     _______,     _______,     _______,     _______,     _______,     _______,     _______,  _______,   _______,              _______,  _______,    _______,    _______,    _______,
-        _______,  _______,  _______,                                _______,                                 _______,  _______, _______,  _______,  _______,  _______,  _______,    _______,  _______),
+        _______,  SELWORD,  _______,                                _______,                                 _______,  _______, _______,  _______,  _______,  _______,  _______,    _______,  _______),
 
 };
 
@@ -106,9 +110,9 @@ static tap ctltap_state = {
 void ctl_finished (tap_dance_state_t *state, void *user_data) {
   ctltap_state.state = cur_dance(state);
   switch (ctltap_state.state) {
-  case SINGLE_TAP: set_oneshot_layer(SEND_STRINGS, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
+  case SINGLE_TAP: set_oneshot_layer(MACROS, ONESHOT_START); clear_oneshot_layer_state(ONESHOT_PRESSED); break;
   case SINGLE_HOLD: register_code(KC_LCTL); break;
-  case DOUBLE_TAP: set_oneshot_layer(SEND_STRINGS, ONESHOT_START); set_oneshot_layer(1, ONESHOT_PRESSED); break;
+  case DOUBLE_TAP: set_oneshot_layer(MACROS, ONESHOT_START); set_oneshot_layer(1, ONESHOT_PRESSED); break;
   case DOUBLE_HOLD: register_code(KC_LCTL); layer_on(1); break;
   }
 }
@@ -118,7 +122,7 @@ void ctl_reset (tap_dance_state_t *state, void *user_data) {
   case SINGLE_TAP: break;
   case SINGLE_HOLD: unregister_code(KC_LCTL); break;
   case DOUBLE_TAP: break;
-  case DOUBLE_HOLD: layer_off(SEND_STRINGS); unregister_code(KC_LCTL); break;
+  case DOUBLE_HOLD: layer_off(MACROS); unregister_code(KC_LCTL); break;
   }
   ctltap_state.state = 0;
 }
@@ -144,6 +148,10 @@ bool process_record_keymap(uint16_t keycode, keyrecord_t *record) {
 }
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+
+  const uint8_t mods = get_mods();
+  const uint8_t oneshot_mods = get_oneshot_mods();
+
   switch (keycode) {
   case SS_EML:
     if (record->event.pressed) {
@@ -156,14 +164,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
     }
     return false;
+  case KC_PDOT:  // Types [], {}, or <> and puts cursor between braces.
+    if (record->event.pressed) {
+      clear_oneshot_mods();  // Temporarily disable mods.
+      unregister_mods(MOD_MASK_CSAG);
+      if ((mods | oneshot_mods) & MOD_MASK_CTRL) {
+        SEND_STRING("()");
+      } else if ((mods | oneshot_mods) & MOD_MASK_ALT) {
+        SEND_STRING("[]");
+      } else if ((mods | oneshot_mods) & MOD_MASK_GUI) {
+        SEND_STRING("{}");
+      } else if ((mods | oneshot_mods) & MOD_MASK_SHIFT) {
+        SEND_STRING("<>");
+      } else {SEND_STRING("."); return false;}
+      tap_code(KC_LEFT);  // Move cursor between braces.
+      register_mods(mods);  // Restore mods.
+    }
+    return false;
   }
+  if (!process_select_word(keycode, record, SELWORD)) { return false; }
   return true;
 }
+
+
 
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [MAC_BASE] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
     [MAC_FN]   = {ENCODER_CCW_CW(RGB_VAD, RGB_VAI) },
-    [SEND_STRINGS] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
+    [MACROS] = {ENCODER_CCW_CW(KC_VOLD, KC_VOLU) },
 };
 #endif
